@@ -5,19 +5,20 @@
   
 
   
-  <title>Xbs&#39;s blog</title>
+  <title>retrofit源码解析 | Xbs&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="description">
-<meta name="keywords" content="android">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Xbs&#39;s blog">
-<meta property="og:url" content="https://a747368836.github.io/index.html">
+  <meta name="description" content="Retrofit源码解读文章会用注释的方式来进行解读，同时也是作者（菜鸡）看源码的心路历程源码基于 retrofit2.6.0 retrofit的建立都是从这里开始1LoginService loginService = retrofit.create(LoginService.class);  那就点进create方法里面看一下1234567891011121314151617181920212">
+<meta name="keywords" content="android,retrofit,动态代理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="retrofit源码解析">
+<meta property="og:url" content="https://a747368836.github.io/2019/10/19/retrofit/index.html">
 <meta property="og:site_name" content="Xbs&#39;s blog">
-<meta property="og:description" content="description">
+<meta property="og:description" content="Retrofit源码解读文章会用注释的方式来进行解读，同时也是作者（菜鸡）看源码的心路历程源码基于 retrofit2.6.0 retrofit的建立都是从这里开始1LoginService loginService = retrofit.create(LoginService.class);  那就点进create方法里面看一下1234567891011121314151617181920212">
 <meta property="og:locale" content="ch">
+<meta property="og:updated_time" content="2019-10-19T09:56:17.769Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Xbs&#39;s blog">
-<meta name="twitter:description" content="description">
+<meta name="twitter:title" content="retrofit源码解析">
+<meta name="twitter:description" content="Retrofit源码解读文章会用注释的方式来进行解读，同时也是作者（菜鸡）看源码的心路历程源码基于 retrofit2.6.0 retrofit的建立都是从这里开始1LoginService loginService = retrofit.create(LoginService.class);  那就点进create方法里面看一下1234567891011121314151617181920212">
   
     <link rel="alternate" href="/atom.xml" title="Xbs&#39;s blog" type="application/atom+xml">
   
@@ -68,9 +69,7 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-retrofit" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-retrofit" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/10/19/retrofit/" class="article-date">
   <time datetime="2019-10-19T06:51:27.000Z" itemprop="datePublished">2019-10-19</time>
@@ -83,8 +82,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/10/19/retrofit/">retrofit源码解析</a>
+    <h1 class="article-title" itemprop="name">
+      retrofit源码解析
     </h1>
   
 
@@ -137,62 +136,19 @@
     </footer>
   </div>
   
-</article>
-
-
+    
+<nav id="article-nav">
   
-    <article id="post-RSA" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/10/13/RSA/" class="article-date">
-  <time datetime="2019-10-13T06:39:48.000Z" itemprop="datePublished">2019-10-13</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/10/13/RSA/">物联网安全作业（RSA加密解密）</a>
-    </h1>
+    <a href="/2019/10/13/RSA/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">物联网安全作业（RSA加密解密）</div>
+    </a>
   
+</nav>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="备份地址："><a href="#备份地址：" class="headerlink" title="备份地址："></a>备份地址：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://blog.bilibililike.top/2019/10/13/RSA/</span><br></pre></td></tr></table></figure>
-
-<h2 id="密文"><a href="#密文" class="headerlink" title="密文"></a>密文</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">F3gxnrQTqlpd7AGBkOsEnIsu3xWn6/WfEyCpFdLPnAscNjYUEI4jgY8WS9X7fkWKEgOJiYTH+AVSxu1PMJ/8/o4eGOCGrww0jV6MevAr1LH6w+KR+HWuT1FR/esjqRdKYza+RYJ64IJYmHEj5CU7whhxd4/R5B2p/j2GFMYec3A=</span><br></pre></td></tr></table></figure>
-
-<h2 id="作业用公钥"><a href="#作业用公钥" class="headerlink" title="作业用公钥"></a>作业用公钥</h2><p>公钥</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">private static String publicK = &quot;MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCIXCOLG2leymC1gs/QSlNzNk6C9ZDmzNPa0QDYYXpuwMgEGZkqzg+tCFD9iENx/UBKo/eXsd+isor5cD3EfkroQAGPMOoeyLXjV0Si2LhFHb+BpuMytn/9Yk/fLxL4g5wDUdCwEtBCwBo5brl3vRM6wQn5qDFVekFM8SDsN8kpiQIDAQAB&quot;;</span><br></pre></td></tr></table></figure>
-
-<p>运行如下代码即可取到明文</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">private static String publicK = &quot;MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCIXCOLG2leymC1gs/QSlNzNk6C9ZDmzNPa0QDYYXpuwMgEGZkqzg+tCFD9iENx/UBKo/eXsd+isor5cD3EfkroQAGPMOoeyLXjV0Si2LhFHb+BpuMytn/9Yk/fLxL4g5wDUdCwEtBCwBo5brl3vRM6wQn5qDFVekFM8SDsN8kpiQIDAQAB&quot;;</span><br><span class="line">private static String messageEn = &quot;F3gxnrQTqlpd7AGBkOsEnIsu3xWn6/WfEyCpFdLPnAscNjYUEI4jgY8WS9X7fkWKEgOJiYTH+AVSxu1PMJ/8/o4eGOCGrww0jV6MevAr1LH6w+KR+HWuT1FR/esjqRdKYza+RYJ64IJYmHEj5CU7whhxd4/R5B2p/j2GFMYec3A=&quot;;</span><br><span class="line">public static String decryptPublic(String str, String publicKey) throws Exception&#123;</span><br><span class="line">    byte[] inputByte = decodeBase64(str.getBytes(StandardCharsets.UTF_8));</span><br><span class="line">    byte[] decoded = decodeBase64(publicKey);</span><br><span class="line">    RSAPublicKey pubKey = (RSAPublicKey) KeyFactory</span><br><span class="line">            .getInstance(&quot;RSA&quot;).generatePublic(new X509EncodedKeySpec(decoded));</span><br><span class="line">    Cipher cipher = Cipher.getInstance(&quot;RSA&quot;);</span><br><span class="line">    cipher.init(Cipher.DECRYPT_MODE, pubKey);</span><br><span class="line">    return new String(cipher.doFinal(inputByte));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public static void main(String[] args) throws Exception &#123;</span><br><span class="line">    String messageDe = decryptPublic(messageEn, publicK);</span><br><span class="line">    System.out.println(&quot;还原后的字符串为:&quot; + messageDe);</span><br><span class="line">    System.out.println();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>完整工具类实现代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br></pre></td><td class="code"><pre><span class="line">public class RSAUtil &#123;</span><br><span class="line">    /**</span><br><span class="line">     * keymap.get(0) 为公钥</span><br><span class="line">     * keymap.get(0) 为私钥</span><br><span class="line">     */</span><br><span class="line">    private static Map&lt;Integer, String&gt; keyMap = new HashMap&lt;Integer, String&gt;();</span><br><span class="line">    private static String secretK = &quot;私钥不公开&quot;;</span><br><span class="line">    private static String publicK = &quot;MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCIXCOLG2leymC1gs/QSlNzNk6C9ZDmzNPa0QDYYXpuwMgEGZkqzg+tCFD9iENx/UBKo/eXsd+isor5cD3EfkroQAGPMOoeyLXjV0Si2LhFHb+BpuMytn/9Yk/fLxL4g5wDUdCwEtBCwBo5brl3vRM6wQn5qDFVekFM8SDsN8kpiQIDAQAB&quot;;</span><br><span class="line">    /**</span><br><span class="line">     * 随机生成密钥对</span><br><span class="line">     *</span><br><span class="line">     * @throws NoSuchAlgorithmException 计算过程出现异常</span><br><span class="line">     */</span><br><span class="line">    public static void genKeyPair() throws NoSuchAlgorithmException &#123;</span><br><span class="line">        // KeyPairGenerator类用于生成公钥和私钥对，基于RSA算法生成对象</span><br><span class="line">        KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance(&quot;RSA&quot;);</span><br><span class="line">        // 初始化密钥对生成器，密钥大小为96-1024位</span><br><span class="line">        keyPairGen.initialize(1024, new SecureRandom());</span><br><span class="line">        // 生成一个密钥对，保存在keyPair中</span><br><span class="line">        KeyPair keyPair = keyPairGen.generateKeyPair();</span><br><span class="line">        RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();   // 得到私钥</span><br><span class="line">        RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();  // 得到公钥</span><br><span class="line">        String publicKeyString = new String(encodeBase64(publicKey.getEncoded()));</span><br><span class="line">        // 得到私钥字符串</span><br><span class="line">        String privateKeyString = new String(encodeBase64((privateKey.getEncoded())));</span><br><span class="line">        // 将公钥和私钥保存到Map</span><br><span class="line">        keyMap.put(0, publicKeyString);  //0表示公钥</span><br><span class="line">        keyMap.put(1, privateKeyString);  //1表示私钥</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * RSA公钥加密</span><br><span class="line">     *</span><br><span class="line">     * @param str       加密字符串</span><br><span class="line">     * @param publicKey 公钥</span><br><span class="line">     * @return 密文</span><br><span class="line">     * @throws Exception 加密过程中的异常信息</span><br><span class="line">     */</span><br><span class="line">    public static String encryptPublic(String str, String publicKey) throws Exception &#123;</span><br><span class="line">        //base64编码的公钥</span><br><span class="line">        byte[] decoded = decodeBase64(publicKey);</span><br><span class="line">        RSAPublicKey pubKey = (RSAPublicKey) KeyFactory</span><br><span class="line">                .getInstance(&quot;RSA&quot;)</span><br><span class="line">                .generatePublic(new X509EncodedKeySpec(decoded));</span><br><span class="line">        //RSA加密</span><br><span class="line">        Cipher cipher = Cipher.getInstance(&quot;RSA&quot;);</span><br><span class="line">        cipher.init(Cipher.ENCRYPT_MODE, pubKey);</span><br><span class="line">        return encodeBase64String(cipher.doFinal(str.getBytes(StandardCharsets.UTF_8)));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * RSA私钥加密</span><br><span class="line">     * @param str 待加密文本</span><br><span class="line">     * @param privateKey 私钥</span><br><span class="line">     * @return 加密后文本</span><br><span class="line">     * @throws Exception 抛出的异常</span><br><span class="line">     */</span><br><span class="line">    public static String encryptPrivate(String str, String privateKey) throws Exception &#123;</span><br><span class="line">        //base64编码的私钥</span><br><span class="line">        byte[] decoded = decodeBase64(privateKey);</span><br><span class="line">        RSAPrivateKey priKey = (RSAPrivateKey) KeyFactory</span><br><span class="line">                .getInstance(&quot;RSA&quot;).generatePrivate(new PKCS8EncodedKeySpec(decoded));</span><br><span class="line">        //RSA加密</span><br><span class="line">        Cipher cipher = Cipher.getInstance(&quot;RSA&quot;);</span><br><span class="line">        cipher.init(Cipher.ENCRYPT_MODE, priKey);</span><br><span class="line">        return encodeBase64String(cipher.doFinal(str.getBytes(StandardCharsets.UTF_8)));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * RSA私钥解密</span><br><span class="line">     *</span><br><span class="line">     * @param str        加密字符串</span><br><span class="line">     * @param privateKey 私钥</span><br><span class="line">     * @return 明文</span><br><span class="line">     * @throws Exception 解密过程中的异常信息</span><br><span class="line">     */</span><br><span class="line">    public static String decryptPrivate(String str, String privateKey) throws Exception &#123;</span><br><span class="line">        //64位解码加密后的字符串</span><br><span class="line">        byte[] inputByte = decodeBase64(str.getBytes(StandardCharsets.UTF_8));</span><br><span class="line">        //base64编码的私钥</span><br><span class="line">        byte[] decoded = decodeBase64(privateKey);</span><br><span class="line">        RSAPrivateKey priKey = (RSAPrivateKey) KeyFactory.getInstance(&quot;RSA&quot;).generatePrivate(new PKCS8EncodedKeySpec(decoded));</span><br><span class="line">        //RSA解密</span><br><span class="line">        Cipher cipher = Cipher.getInstance(&quot;RSA&quot;);</span><br><span class="line">        cipher.init(Cipher.DECRYPT_MODE, priKey);</span><br><span class="line">        return new String(cipher.doFinal(inputByte));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * RSA公钥解密</span><br><span class="line">     * @param str 待解密文本</span><br><span class="line">     * @param publicKey 公钥</span><br><span class="line">     * @return 解密后的明文</span><br><span class="line">     * @throws Exception 异常</span><br><span class="line">     */</span><br><span class="line">    public static String decryptPublic(String str, String publicKey) throws Exception&#123;</span><br><span class="line">        //64位解码加密后的字符串</span><br><span class="line">        byte[] inputByte = decodeBase64(str.getBytes(StandardCharsets.UTF_8));</span><br><span class="line">        //base64编码的公钥</span><br><span class="line">        byte[] decoded = decodeBase64(publicKey);</span><br><span class="line">        RSAPublicKey pubKey = (RSAPublicKey) KeyFactory</span><br><span class="line">                .getInstance(&quot;RSA&quot;).generatePublic(new X509EncodedKeySpec(decoded));</span><br><span class="line">        //RSA解密</span><br><span class="line">        Cipher cipher = Cipher.getInstance(&quot;RSA&quot;);</span><br><span class="line">        cipher.init(Cipher.DECRYPT_MODE, pubKey);</span><br><span class="line">        return new String(cipher.doFinal(inputByte));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    private static byte[] decodeBase64(String res) &#123;</span><br><span class="line">        return Base64.getDecoder().decode(res);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static byte[] decodeBase64(byte[] res) &#123;</span><br><span class="line">        return Base64.getDecoder().decode(res);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static String encodeBase64String(byte[] res) &#123;</span><br><span class="line">        return Base64.getEncoder().encodeToString(res);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static byte[] encodeBase64(byte[] res) &#123;</span><br><span class="line">        return Base64.getEncoder().encode(res);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://a747368836.github.io/2019/10/13/RSA/" data-id="ck1xe4ds000013cl4mu6jhrx3" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RSA/">RSA</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/加密解密/">加密解密</a></li></ul>
-
-    </footer>
-  </div>
   
 </article>
-
-
-  
-
 
 </section>
         
