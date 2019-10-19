@@ -7,18 +7,18 @@
   
   <title>retrofit源码解析 | Xbs&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Retrofit源码解读文章会用注释的方式来进行解读，同时也是作者（菜鸡）看源码的心路历程源码基于 retrofit2.6.0 retrofit的建立都是从这里开始1LoginService loginService = retrofit.create(LoginService.class);  那就点进create方法里面看一下1234567891011121314151617181920212">
+  <meta name="description" content="Retrofit源码解读（一）文章会用注释的方式来进行解读，同时也是作者（菜鸡）看源码的心路历程源码基于 retrofit2.6.0 retrofit的建立都是从这里开始1LoginService loginService = retrofit.create(LoginService.class);  那就点进create方法里面看一下1234567891011121314151617181920">
 <meta name="keywords" content="android,retrofit,动态代理">
 <meta property="og:type" content="article">
 <meta property="og:title" content="retrofit源码解析">
 <meta property="og:url" content="https://a747368836.github.io/2019/10/19/retrofit/index.html">
 <meta property="og:site_name" content="Xbs&#39;s blog">
-<meta property="og:description" content="Retrofit源码解读文章会用注释的方式来进行解读，同时也是作者（菜鸡）看源码的心路历程源码基于 retrofit2.6.0 retrofit的建立都是从这里开始1LoginService loginService = retrofit.create(LoginService.class);  那就点进create方法里面看一下1234567891011121314151617181920212">
+<meta property="og:description" content="Retrofit源码解读（一）文章会用注释的方式来进行解读，同时也是作者（菜鸡）看源码的心路历程源码基于 retrofit2.6.0 retrofit的建立都是从这里开始1LoginService loginService = retrofit.create(LoginService.class);  那就点进create方法里面看一下1234567891011121314151617181920">
 <meta property="og:locale" content="ch">
-<meta property="og:updated_time" content="2019-10-19T09:56:17.769Z">
+<meta property="og:updated_time" content="2019-10-19T11:51:44.539Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="retrofit源码解析">
-<meta name="twitter:description" content="Retrofit源码解读文章会用注释的方式来进行解读，同时也是作者（菜鸡）看源码的心路历程源码基于 retrofit2.6.0 retrofit的建立都是从这里开始1LoginService loginService = retrofit.create(LoginService.class);  那就点进create方法里面看一下1234567891011121314151617181920212">
+<meta name="twitter:description" content="Retrofit源码解读（一）文章会用注释的方式来进行解读，同时也是作者（菜鸡）看源码的心路历程源码基于 retrofit2.6.0 retrofit的建立都是从这里开始1LoginService loginService = retrofit.create(LoginService.class);  那就点进create方法里面看一下1234567891011121314151617181920">
   
     <link rel="alternate" href="/atom.xml" title="Xbs&#39;s blog" type="application/atom+xml">
   
@@ -91,7 +91,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="Retrofit源码解读"><a href="#Retrofit源码解读" class="headerlink" title="Retrofit源码解读"></a>Retrofit源码解读</h1><p>文章会用注释的方式来进行解读，同时也是作者（菜鸡）看源码的心路历程<br>源码基于 retrofit2.6.0</p>
+        <h1 id="Retrofit源码解读（一）"><a href="#Retrofit源码解读（一）" class="headerlink" title="Retrofit源码解读（一）"></a>Retrofit源码解读（一）</h1><p>文章会用注释的方式来进行解读，同时也是作者（菜鸡）看源码的心路历程<br>源码基于 retrofit2.6.0</p>
 <h2 id="retrofit的建立都是从这里开始"><a href="#retrofit的建立都是从这里开始" class="headerlink" title="retrofit的建立都是从这里开始"></a>retrofit的建立都是从这里开始</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LoginService loginService = retrofit.create(LoginService.class);</span><br></pre></td></tr></table></figure>
 
 <h2 id="那就点进create方法里面看一下"><a href="#那就点进create方法里面看一下" class="headerlink" title="那就点进create方法里面看一下"></a>那就点进create方法里面看一下</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>) <span class="comment">// Single-interface proxy creation guarded by parameter safety.单接口代理的创建方式被参数安全所保障</span></span><br><span class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">T <span class="title">create</span><span class="params">(<span class="keyword">final</span> Class&lt;T&gt; service)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//检查接口里的方法是否规范以及接口是否继承了其他的接口</span></span><br><span class="line">    Utils.validateServiceInterface(service);</span><br><span class="line">    <span class="comment">//validateEagerly == true 提前进行一些预处理操作</span></span><br><span class="line">    <span class="comment">//这些其实看方法名就能看出来，先不深究，先把一套完整的流程弄清楚</span></span><br><span class="line">    <span class="keyword">if</span> (validateEagerly) &#123;</span><br><span class="line">      eagerlyValidateMethods(service);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//返回了一个泛型 T 看命名应该是动态代理 传递了三个参数</span></span><br><span class="line">    <span class="comment">//param1：传进来的接口的类加载器，</span></span><br><span class="line">    <span class="comment">//param2：一个class数组 但是retrofit就只穿了你所创建的接口</span></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">        param3：一个InvocationHandler</span></span><br><span class="line"><span class="comment">        是一个接口 跳转过去会有一段注释告诉你：</span></span><br><span class="line"><span class="comment">        这个类是invocation handler的一个代理实例的实现。</span></span><br><span class="line"><span class="comment">        每一个代理实例都与invocation handler有联系。当一个方法被代理实例调用时，</span></span><br><span class="line"><span class="comment">        该方法调用的操作会被编码且分发到他自己的invocation handler的invoke方法中去（渣翻译，可能出错）</span></span><br><span class="line"><span class="comment">        大概就是 把你传进去的接口的方法 都放到一个类里边去实现？这个意思吗？</span></span><br><span class="line"><span class="comment">        不管怎么说 这个类里的invode()方法肯定是关键</span></span><br><span class="line"><span class="comment">        为什么写这么啰嗦，问就是还没了解过动态代理，只是听说过</span></span><br><span class="line"><span class="comment">        todo : 我好菜啊，过完这个就去吧动态代理给弄清楚了。。。</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">return</span> (T) Proxy.newProxyInstance(service.getClassLoader(), <span class="keyword">new</span> Class&lt;?&gt;[] &#123; service &#125;,</span><br><span class="line">        <span class="keyword">new</span> InvocationHandler() &#123;</span><br><span class="line">          <span class="keyword">private</span> <span class="keyword">final</span> Platform platform = Platform.get();</span><br><span class="line">          <span class="keyword">private</span> <span class="keyword">final</span> Object[] emptyArgs = <span class="keyword">new</span> Object[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">          <span class="meta">@Override</span> <span class="keyword">public</span> <span class="meta">@Nullable</span> <span class="function">Object <span class="title">invoke</span><span class="params">(Object proxy, Method method,</span></span></span><br><span class="line"><span class="function"><span class="params">              @Nullable Object[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">            <span class="comment">// If the method is a method from Object then defer to normal invocation.</span></span><br><span class="line">            <span class="comment">//如果方法来自Object就延迟（?）到一个普通的调用？这两个if应该都是一些检查</span></span><br><span class="line">            <span class="keyword">if</span> (method.getDeclaringClass() == Object.class) &#123;</span><br><span class="line">              <span class="keyword">return</span> method.invoke(<span class="keyword">this</span>, args);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (platform.isDefaultMethod(method)) &#123;</span><br><span class="line">              <span class="keyword">return</span> platform.invokeDefaultMethod(method, service, proxy, args);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//最后返回的一个应该才是需要关注的 下面去看看这个方法吧</span></span><br><span class="line">            <span class="keyword">return</span> loadServiceMethod(method).invoke(args != <span class="keyword">null</span> ? args : emptyArgs);</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
@@ -107,7 +107,7 @@
 <h2 id="HttpServiceMethod-lt-ResponseT-ReturnT-gt-类"><a href="#HttpServiceMethod-lt-ResponseT-ReturnT-gt-类" class="headerlink" title="HttpServiceMethod&lt;ResponseT, ReturnT&gt; 类"></a>HttpServiceMethod&lt;ResponseT, ReturnT&gt; 类</h2><p>这个类的代码太多了，就不完整的贴上来了。首先官方对这个类的注释是</p>
 <ul>
 <li>Adapts an invocation of an interface method into an HTTP call</li>
-<li>翻译：把一个接口方法的调用转换进一个Http Call<br>同时它还是刚刚<code>ServiceMethod</code>的一个子类，也就是说他实现了<code>ServiceMethod</code>的invoke方法<br>这个是不是和之前提到的动态代理感觉扯得上关系了？<br>之前create方法返回的也是一个<code>return loadServiceMethod(method).invoke(args != null ? args : emptyArgs);</code><br>不出意外的话，invoke方法的具体实现就在这儿了</li>
+<li>翻译：把一个接口方法的调用转换进一个Http Call<br>同时它还是刚刚<code>ServiceMethod</code>的一个子类，也就是说他实现了<code>ServiceMethod</code>的invoke方法<br>不出意外的话，invoke方法的具体实现就在这儿了<br>这个是不是和之前提到的动态代理感觉扯得上关系了？</li>
 </ul>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span> <span class="keyword">final</span> <span class="meta">@Nullable</span> <span class="function">ReturnT <span class="title">invoke</span><span class="params">(Object[] args)</span> </span>&#123;</span><br><span class="line">    Call&lt;ResponseT&gt; call = <span class="keyword">new</span> OkHttpCall&lt;&gt;(requestFactory, args, callFactory, responseConverter);</span><br><span class="line">    <span class="keyword">return</span> adapt(call, args);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 
@@ -117,18 +117,22 @@
 
 <p>好了，到这里就大概对retrofit有了一个了解了</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
-<li><p>retrofit的核心就是大家都知道的动态代理，其实就是那个 <code>Proxy.newProxyInstance</code> 把你在接口中所写的方法 通过InvocationHandler.invoke（）方法来把你的方法、参数给传递到其他地方去完成任务</p>
-</li>
-<li><p>也就是说，你每一次调用接口里的方法时，都会调用invoke方法，把参数最终传递到retrofit2.OkHttpCall内去完成网络请求。</p>
-</li>
-<li><p>好赚啊。。。读完感觉动态代理大概是个啥也清楚了。</p>
-</li>
+<li>retrofit的核心就是大家都知道的动态代理，其实就是那个 <code>Proxy.newProxyInstance</code>的三个参数</li>
 </ul>
+<blockquote>
+<p>1.ClassLoader 类加载器<br>2.Class&lt;?&gt;[] 这里传入若干接口，newProxyInstance会宣称实现所有传进去的接口，这样你就可以调用这些接口里的方法<br>3.InvocationHandler 每一个方法都会对应一个自己的InvocationHandler，通过它的invoke()逻辑来实现接口中的方法</p>
+</blockquote>
+<ul>
+<li>对应到retrofit中</li>
+</ul>
+<blockquote>
+<p>第二个参数Class&lt;?&gt;[] 中会传入你定义的接口<br>传入的接口中的方法最终会由HTTPServiceMethod中的invoke()方法来进行实现。也就是创建一个retrofit2.OkHttpCall&lt;&gt;()</p>
+</blockquote>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://a747368836.github.io/2019/10/19/retrofit/" data-id="ck1xe4drw00003cl422ki41k0" class="article-share-link">Share</a>
+      <a data-url="https://a747368836.github.io/2019/10/19/retrofit/" data-id="ck1xi54200000jxl4ga9bdirp" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/">android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/retrofit/">retrofit</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/动态代理/">动态代理</a></li></ul>
